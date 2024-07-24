@@ -1,0 +1,31 @@
+services:
+  app:
+    container_name: leerstand
+    build:
+      context: .
+      # dockerfile: .
+    pull_policy: build
+    ports:
+      - 127.0.0.1:8098:8000
+    image: leerstand:latest
+    working_dir: /django_project
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      ADMIN_URL: ${ADMIN_URL}
+      DEBUG: ${DEBUG:-0}
+    volumes:
+      - volume-leerstand:/django_project/db
+      - /srv/http/leerstand-data:/django_project/data
+      - /srv/http/leerstand-static:/django_project/static
+    restart: unless-stopped
+    networks:
+      - network-leerstand
+
+volumes:
+  volume-leerstand:
+    name: leerstand
+
+networks:
+  network-leerstand:
+    name: leerstand

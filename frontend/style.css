@@ -1,0 +1,121 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+#loading {
+  z-index: 9001;
+  position: absolute;
+  background: #0009;
+  width: 100%;
+  height: 100%;
+  color: white;
+  font-size: 2em;
+  text-align: center;
+  line-height: 100vh;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+#overlay {
+  z-index: 2000;
+  position: absolute;
+  right: .5em;
+  top: .5em;
+}
+#city-counter {
+  background: #FFFA;
+  color: #666;
+  padding: 4px 6px 2px;
+  border-radius: 8px;
+  font-size: smaller;
+}
+
+.pin svg {
+  filter: drop-shadow(0 0 5px #888);
+  width: 100%;
+  height: 100%;
+}
+
+#popup {
+  z-index: 3000;
+  position: absolute;
+  background: #0009;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+}
+#popup .container {
+  background: white;
+  padding: 8px 12px;
+  margin: 20px auto;
+  max-width: 600px;
+  border-radius: 8px;
+}
+#popup h3 {
+  margin-top: 4px;
+  border-bottom: 1px solid gray;
+  line-height: 1.5;
+}
+#popup .close {
+  float: right;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+#popup .close:hover {
+  font-weight: 900;
+}
+#popup img {
+  display: inline-block;
+  width: 100%;
+  /* no-img fallback */
+  line-height: 120px;
+  background: #666;
+  color: white;
+  text-align: center;
+  font-weight: 100;
+  font-size: 24px;
+}
+
+@media(max-width: 750px) {
+  #popup .container {
+    margin: unset;
+    max-width: 100%;
+    min-height: calc(100% - 2*8px);
+    border-radius: unset;
+  }
+  #popup .close {
+    font-size: 1.5em;
+  }
+  #popup h3 {
+    font-size: 1.5em;
+  }
+}
+
+.pin-city {
+  fill-opacity: 0;
+}
+.fc0 {
+  fill: #FFF;
+}
+.fc1, .fc2 {
+  fill: #EBB;
+}
+.fc3, .fc4 {
+  fill: #D66;
+}
+.fc5, .fc6 {
+  fill: #B22;
+}
+.fc7 {
+  fill: #800;
+}
+
+.leaflet-control-attribution svg, .leaflet-control-attribution rect {
+  width: .9em;
+  height: .9em;
+}

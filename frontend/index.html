@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+  <title>Leerstand</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/ico/32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/ico/16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+  <link rel="manifest" href="/ico/manifest.json">
+  <meta name="msapplication-config" content="/ico/browserconfig.xml">
+
+  <script src="/3p/leaflet/leaflet.js"></script>
+  <script src="/3p/leaflet/locate/L.Control.Locate.min.js"></script>
+  <script src="/script.js"></script>
+  <link rel="stylesheet" href="/3p/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="/3p/leaflet/locate/L.Control.Locate.css" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div id="loading">Loading ...</div>
+  <div id="popup" onclick="event.target === this && closePopup()" hidden>
+    <div class="container">
+      <a class="close" onclick="closePopup()">⨉</a>
+      <h3></h3>
+      <p id="_desc"></p>
+      <p><em>Leerstand:</em> <b id="_since"></b></p>
+      <img src="" alt="Kein Bild" />
+    </div>
+  </div>
+  <div id="overlay">
+    <span id="city-counter" hidden></span>
+    <select id="city-select" hidden onchange="this.value ? showCity(this.value): showCityOverview()">
+      <option value="">-----</option>
+    </select>
+  </div>
+  <div id="map"></div>
+  <script defer>start()</script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.egg-info/
+
+backend/.env
+backend/data/
+backend/db/
+backend/static/
+
+frontend/imprint.html

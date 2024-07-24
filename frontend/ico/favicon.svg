@@ -1,0 +1,14 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<g fill="#fff" stroke="#000" stroke-width="2">
+<polygon id="tt" points="90,31 27,31 24,27 30,24 32,15 44,16 41,10 50,2"/>
+<rect id="t3" x="67" y="31" width="16" height="6"/>
+<rect id="t2" x="42" y="31" width="16" height="6"/>
+<rect id="m3" x="70" y="37" width="10" height="36"/>
+<rect id="m2" x="45" y="37" width="10" height="36"/>
+<path id="m1" d="M29,73h-8v-12l8-7z"/>
+<rect id="b3" x="67" y="73" width="16" height="6"/>
+<rect id="b2" x="42" y="73" width="16" height="6"/>
+<rect id="b1" x="17" y="73" width="16" height="6"/>
+<rect id="g0" x="8" y="79" width="84" height="10"/>
+<rect id="gg" x="1" y="89" width="98" height="10"/>
+</g></svg>
