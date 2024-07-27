@@ -1,7 +1,6 @@
 const DATA_ROOT = '/data/';
 let MAP = null;
 let LAYER = null;
-let CITIES = {};
 let PLACES = {};
 const DEFAULT_CENTER = [51.2, 9];
 const DEFAULT_ZOOM = 6;
@@ -15,16 +14,9 @@ async function loadJson(url) {
     return await res.json();
 }
 
-async function loadCities() {
-    CITIES = {};
-    for (const city of await loadJson(DATA_ROOT + 'cities.json')) {
-        CITIES[city.id] = city;
-    }
-}
-
-async function loadCity(cityId) {
+async function loadData() {
     PLACES = {};
-    for (const place of await loadJson(DATA_ROOT + cityId + '/data.json')) {
+    for (const place of await loadJson(DATA_ROOT + 'data.json')) {
         if (since(place.until) > 0) {
             continue; // not vacant anymore
         }
@@ -36,15 +28,6 @@ async function loadCity(cityId) {
 // ---------------------
 //  Helper
 // ---------------------
-
-function getCityId(slug) {
-    for (const city of Object.values(CITIES)) {
-        if (city.slug === slug) {
-            return city.id;
-        }
-    }
-    return null;
-}
 
 function since(date) {
     if (!date) {
@@ -84,18 +67,6 @@ function closePopup(e) {
     setPlace(null)
 }
 
-function makeCityMarker(city) {
-    return L.marker(L.latLng(city.loc), {
-        pid: city.id,
-        title: city.name,
-        icon: makeIcon('pin pin-city'),
-    }).on('click', cityPinClick);
-}
-
-async function cityPinClick(pin) {
-    await showCity(pin.target.options.pid);
-}
-
 // ---------------------
 //  UI updates
 // ---------------------
@@ -112,14 +83,8 @@ function setPlace(placeId) {
         : place.since ? 'seit ' + place.since : '???';
     div.querySelector('#_desc').innerText = place.desc || '';
 
-    location.hash = location.hash.split('|')[0] + (hide ? '' : '|' + placeId);
+    location.hash = hide ? '' : placeId;
     document.title = document.title.split(' "', 1)[0] + (hide ? '' : ' "' + place.addr + '"');
-}
-
-function setCity(city) {
-    document.getElementById('city-select').value = city ? city.id : '';
-    location.hash = city ? city.slug : '';
-    document.title = document.title.split(' in ', 1)[0] + (city ? ' in ' + city.name : '');
 }
 
 function updateCounter() {
@@ -153,43 +118,7 @@ function initMap() {
     L.control.locate({ showPopup: false }).addTo(MAP);
 }
 
-function initCities() {
-    const select = document.getElementById('city-select');
-    while (select.options.length > 1) {
-        select.options.remove(1);
-    }
-    for (const city of Object.values(CITIES)) {
-        const opt = document.createElement('option');
-        opt.value = city.id;
-        opt.innerText = city.name;
-        select.add(opt);
-    }
-    select.hidden = false;
-}
-
-// ---------------------
-//  Interactive
-// ---------------------
-
-function showCityOverview() {
-    LAYER.clearLayers();
-    MAP.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
-    setCity(null);
-    PLACES = {};
-    updateCounter();
-
-    for (const city of Object.values(CITIES)) {
-        makeCityMarker(city).addTo(LAYER);
-    }
-}
-
-async function showCity(cityId) {
-    const city = CITIES[cityId];
-    LAYER.clearLayers();
-    MAP.setView(city.loc, city.zoom);
-    setCity(city);
-    await loadCity(cityId);
-
+function initPins() {
     var bounds = L.latLngBounds();
     for (const place of Object.values(PLACES)) {
         const marker = makeMarker(place).addTo(LAYER);
@@ -203,23 +132,14 @@ async function showCity(cityId) {
 
 async function start() {
     initMap();
-    await loadCities();
-    initCities();
+    await loadData();
+    initPins();
+    // LAYER.clearLayers();
+    // MAP.setView(city.loc, city.zoom);
 
-    const [city_slug, place_id] = location.hash.substring(1).split('|');
-    const city_id = city_slug ? getCityId(city_slug) : null;
-    if (city_id) {
-        await showCity(city_id);
-        if (place_id) {
-            setPlace(place_id);
-        }
-    } else {
-        const available_cities = Object.keys(CITIES);
-        if (available_cities.length === 1) {
-            await showCity(available_cities[0]);
-        } else {
-            showCityOverview();
-        }
+    const place_id = location.hash.substring(1);
+    if (place_id) {
+        setPlace(place_id);
     }
     document.getElementById('loading').hidden = true;
 }

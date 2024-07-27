@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group  # , User
 
-from app.models import City, Place
+from app.models import Place
 
 # admin.site.register(Place, )
 
@@ -21,21 +21,8 @@ admin.site.unregister(Group)
 # App adjustments
 #############################
 
-@admin.register(City)
-class CityAdmin(admin.ModelAdmin):
-    list_display = ['name', 'place_count', 'center', 'zoom']
-
-    def get_readonly_fields(self, request, obj=None):
-        return ['name'] if obj else []
-
-    @admin.display(description='Orte')
-    def place_count(self, instance: 'City'):
-        return instance.places.count()
-
-
 @admin.register(Place)
 class PlaceAdmin(admin.ModelAdmin):
-    list_display = ['address', 'city', 'since', 'until', 'created', 'updated']
-    list_filter = ['city']
+    list_display = ['address', 'since', 'until', 'created', 'updated']
     search_fields = ['address', 'description']
     ordering = ['-updated']

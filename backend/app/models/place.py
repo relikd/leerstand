@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 import os
+import json
 from datetime import date
 
 from map_location.fields import LocationField
@@ -10,27 +12,19 @@ from map_location.fields import LocationField
 from app.fields import MonthField
 from common.form.img_with_preview import ThumbnailImageField
 
-import typing
-if typing.TYPE_CHECKING:
-    from app.models.city import City
-
 
 def overwrite_img_upload(instance: 'Place', filename: str):
     id = instance.pk or (Place.objects.count() + 1)
-    path = instance.city.data_path / f'{id}.jpg'
+    path = settings.MEDIA_ROOT / 'img' / f'{id}.jpg'
 
     if path.is_file():
         os.remove(path)
-    return f'{instance.city.data_url}/{id}.jpg'
+    return f'img/{id}.jpg'
 
 
 class Place(models.Model):
     created = models.DateTimeField('Erstellt', auto_now_add=True)
     updated = models.DateTimeField('Geändert', auto_now=True)
-
-    city: 'models.ForeignKey[City]' = models.ForeignKey(
-        'City', on_delete=models.CASCADE, related_name='places',
-        verbose_name='Stadt')
 
     address = models.CharField('Adresse', max_length=100)
     img = ThumbnailImageField('Bild', blank=True, null=True,
@@ -65,7 +59,7 @@ class Place(models.Model):
 
     def save(self, *args, **kwargs):
         rv = super().save(*args, **kwargs)
-        self.city.update_json()
+        Place.update_json()
         return rv
 
     def asJson(self) -> 'dict[str, str|list[float]|None]':
@@ -80,7 +74,13 @@ class Place(models.Model):
                     round(self.location.long, 6)] if self.location else None,
         }
 
+    @staticmethod
+    def update_json():
+        with open(settings.MEDIA_ROOT / 'data.json', 'w') as fp:
+            json.dump([x.asJson() for x in Place.objects.all()
+                       if x.location and x.isVacant], fp)
+
 
 @receiver(post_delete, sender=Place)
 def on_delete_Place(sender, instance: 'Place', using, **kwargs):
-    instance.city.update_json()
+    Place.update_json()

@@ -32,7 +32,6 @@ html, body {
   color: #666;
   padding: 4px 6px 2px;
   border-radius: 8px;
-  font-size: smaller;
 }
 
 .pin svg {
@@ -96,9 +95,6 @@ html, body {
   }
 }
 
-.pin-city {
-  fill-opacity: 0;
-}
 .fc0 {
   fill: #FFF;
 }
