@@ -34,8 +34,8 @@ class Place(models.Model):
     description = models.TextField('Beschreibung', blank=True, null=True)
     location = LocationField('Position', blank=True, null=True, options={
         'map': {
-            'center': [52.52, 13.40],
-            'zoom': 12,
+            'center': settings.MAP_CENTER,
+            'zoom': settings.MAP_ZOOM,
         },
     })
 

@@ -138,6 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ADMIN_URL = os.environ.get('ADMIN_URL', 'admin/').rstrip('/') + '/'
 
+[slat, slon] = os.environ.get('MAP_CENTER', '51.2,9').split(',')
+MAP_CENTER = [float(slat), float(slon)]
+MAP_ZOOM = int(os.environ.get('MAP_ZOOM', '6'))
+
 STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'data/'
